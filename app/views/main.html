@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>#{get 'title' /}</title>
+        <meta charset="${_response_encoding}">
+        <link rel="stylesheet" media="screen" href="/css/main.css"></link>
+        #{get 'moreStyles' /}
+    </head>
+    <body>
+        #{doLayout /}
+        #{get 'moreScripts' /}
+    </body>
+</html>

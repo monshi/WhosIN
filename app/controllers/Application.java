@@ -3,12 +3,17 @@ package controllers;
 import play.*;
 import play.mvc.*;
 
-import views.html.*;
+import java.util.*;
+
+import models.*;
 
 public class Application extends Controller {
-  
-  public static Result index() {
-    return ok(index.render("Your new application is ready."));
-  }
-  
+
+    public static void index() {
+        render();
+    }
+
+    public static void process() {
+    	renderJSON("{success: true}");
+    }
 }

@@ -13,7 +13,7 @@ public class Application extends Controller {
         render();
     }
 
-    public static void process() {
-    	renderJSON("{success: true}");
+    public static void process(String whosinhtml) {
+    	renderJSON("{html: " + whosinhtml + "}");
     }
 }

@@ -10,7 +10,7 @@ GET     /favicon.ico                            404
 
 # Project roots
 
-GET		/process								Application.process
+POST	/process								Application.process
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public

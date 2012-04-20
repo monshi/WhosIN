@@ -2,8 +2,9 @@
   var body    = null,
       iframe  = null,
       form    = null,
+      input   = null,
       urls    = {
-        iframe: 'http://omonshiz-ld.linkedin.biz:9000',
+        iframe: 'http://omonshiz-ld.linkedin.biz:9000/process',
         css: 'http://omonshiz-ld.linkedin.biz:9000/css/whosin.css'
       };
 
@@ -11,7 +12,6 @@
     if(!iframe){
       iframe      = document.createElement('iframe');
     }
-    iframe.src    = urls.iframe;
     iframe.id     = 'whosinIframe';
     iframe.name   = 'whosiniframe';
     resizeIframe();
@@ -21,11 +21,15 @@
   function appendForm() {
       if(!form){
         form      = document.createElement('form');
+        input     = document.createElement('input');
       }
       form.method = 'post';
-      form.action = '';
       form.target = 'whosiniframe';
+      form.action = urls.iframe;
 
+      input.type  = 'hidden';
+      input.name  = 'whosinhtml'
+      form.appendChild(input);
       body.appendChild(form);
   }
 
@@ -41,12 +45,18 @@
     iframe.style.height = window.innerHeight + 'px';
   }
 
+  function submitForm(){
+    input.value = body.innerHTML;
+    form.submit();
+  }
+
   function init() {
     if(!body) {
       body = document.getElementsByTagName('body')[0];
       appendCSS();
       appendIFrame();
       appendForm();
+      submitForm();
       window.addEventListener('resize', resizeIframe, false);
     }
   }

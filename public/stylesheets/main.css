@@ -1,0 +1,49 @@
+body, ul, h1 {
+  margin: 0;
+  padding: 0;
+}
+#whosInWrapper {
+  border-right: 1px solid #ccc;
+  padding: 10px;
+  font: 14px arial;
+}
+
+#whosInWrapper .close-button {
+  float: right;
+}
+
+#whosInWrapper.hide-module {
+  display: none;
+}
+
+#whosInWrapper img {
+  float: left;
+  margin-right: 5px;
+  width: 35px;
+  padding: 1px;
+  border: 1px solid #ccc;
+}
+
+#whosInWrapper h1 {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#whosInWrapper h2 {
+  font: bold 13px arial;
+  margin-left: 40px;
+}
+
+#whosInWrapper h3 {
+  font: normal 12px arial;
+  margin-top: 5px;
+  margin-left: 40px;
+}
+
+#whosInWrapper li {
+  border-bottom: 1px solid #ddd;
+  margin: 10px 0;
+  padding-bottom: 10px;
+  list-style: none;
+  overflow: hidden;
+}

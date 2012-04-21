@@ -7,6 +7,8 @@ import java.util.*;
 
 import models.*;
 
+import java.util.HashMap;
+
 public class Application extends Controller {
 
     public static void index() {
@@ -14,6 +16,10 @@ public class Application extends Controller {
     }
 
     public static void process(String whosinhtml) {
-    	renderJSON("{html: " + whosinhtml + "}");
+    	HashMap peopleData = new HashMap();
+    	peopleData.put("html", whosinhtml);
+    	// redirect("/");
+    	// renderJSON("{html: " + whosinhtml + "}");
+    	index();
     }
 }

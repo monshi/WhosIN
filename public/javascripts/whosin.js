@@ -4,8 +4,8 @@
       form    = null,
       input   = null,
       urls    = {
-        iframe: 'http://omonshiz-ld.linkedin.biz:9000/process',
-        css: 'http://omonshiz-ld.linkedin.biz:9000/css/whosin.css'
+        iframe: 'http://omonshiz-ld.linkedin.biz:7890/process',
+        css: 'http://omonshiz-ld.linkedin.biz:7890/css/whosin.css'
       };
 
   function appendIFrame() {

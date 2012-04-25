@@ -8,7 +8,7 @@
     whosInLayout,
     walker = document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false),
     urls = {
-      root: 'http://omonshiz-ld.linkedin.biz:9000',
+      root: 'http://omonshiz-ld.linkedin.biz:7890',
       css: '/css/main.css',
       noImage:'/img/icon_no_photo_no_border_60x60.png'
     };

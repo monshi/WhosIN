@@ -9,12 +9,13 @@ GET     /                                       Application.index
 GET     /favicon.ico                            404
 
 # Project roots
+POST    /getdata                                Application.getData
 
 POST	/process								Application.process
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
-GET     /js/                                	staticDir:public/javascripts
+GET     /js/                                    staticDir:public/javascripts
 GET     /css/                                   staticDir:public/stylesheets
 GET     /img/                                   staticDir:public/images
 

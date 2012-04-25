@@ -1,5 +1,9 @@
 package controllers;
 
+import java.io.IOException;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import play.*;
 import play.mvc.*;
 
@@ -15,11 +19,17 @@ public class Application extends Controller {
         render();
     }
 
-    public static void process(String whosinhtml) {
-    	HashMap peopleData = new HashMap();
-    	peopleData.put("html", whosinhtml);
-    	// redirect("/");
-    	// renderJSON("{html: " + whosinhtml + "}");
-    	index();
+    public static void process(String whosinhtml)
+        throws IOException, ParseException
+    {
+      JSONObject jsonObj = Calais.run(whosinhtml);
+      System.out.println(jsonObj);
+
+      renderTemplate("Application/index.html", jsonObj.get("result"));
+//      renderJSON(jsonObj);
     }
+
+  public static void getData(String htmlBody){
+    renderText(htmlBody);
+  }
 }

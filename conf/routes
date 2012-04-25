@@ -9,7 +9,7 @@ GET     /                                       Application.index
 GET     /favicon.ico                            404
 
 # Project roots
-POST    /getdata                                Application.getData
+GET    /getdata                                Application.getData
 
 POST	/process								Application.process
 

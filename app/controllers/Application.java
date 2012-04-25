@@ -22,14 +22,15 @@ public class Application extends Controller {
     public static void process(String whosinhtml)
         throws IOException, ParseException
     {
-      JSONObject jsonObj = Calais.run(whosinhtml);
-      System.out.println(jsonObj);
+      ResponseData response = new ResponseData();
+      response.setJson(Calais.run(whosinhtml).toJSONString());
 
-      renderTemplate("Application/index.html", jsonObj.get("result"));
-//      renderJSON(jsonObj);
+      renderTemplate("Application/index.html", response);
     }
 
-  public static void getData(String htmlBody){
-    renderText(htmlBody);
+  public static void getData(){
+    //renderHtml("<script type=\"text/javascript\"> var WhosINData = " + jsonData + ";console.log(WhosINData)</script><script type=\"text/javascript\" src=\"/js/main.js\"></script>");
+
+//    renderTemplate("Application/index.html", response);
   }
 }

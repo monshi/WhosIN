@@ -6,7 +6,7 @@
     inScript = null,
     inInner,
     whosInLayout,
-    walker = document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false),
+//    walker = document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false),
     urls = {
       root: 'http://omonshiz-ld.linkedin.biz:7890',
       css: '/css/main.css',
@@ -63,7 +63,8 @@
           text = document.selection.createRange().text;
         }
       }
-      return text.replace(/^\s+|\s+$/g,'');
+      return WhosINData.result;
+//      return text.replace(/^\s+|\s+$/g,'');
     }
 
     function doSearch() {
@@ -75,7 +76,8 @@
         IN.API.PeopleSearch()
           .fields(['first-name', 'last-name', 'headline', 'picture-url', 'public-profile-url'])
           .params({
-            'keywords': getSelectionText(),
+            'keywords': getSelectionText().people,
+//            'first-name': getSelectionText().people,
             'sort': 'distance'
           })
           .result(function(res){

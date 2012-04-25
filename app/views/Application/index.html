@@ -2,5 +2,8 @@
 #{set title:'WhosIN' /}
 
 #{set 'moreScripts'}
+	<script type="text/javascript">
+    var WhosINData = ${response.getJson().raw()};
+	</script>
 	<script type="text/javascript" src="/js/main.js"></script>
 #{/set}

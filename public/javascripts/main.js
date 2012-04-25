@@ -6,12 +6,17 @@
     inScript = null,
     inInner,
     whosInLayout,
+    items = [],
+    pCallCounter = 0,
+    cCallCounter = 0,
 //    walker = document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false),
     urls = {
       root: 'http://omonshiz-ld.linkedin.biz:7890',
       css: '/css/main.css',
       noImage:'/img/icon_no_photo_no_border_60x60.png'
-    };
+    },
+    $ = jQuery,
+    listContainer = $('ul');
 
     function initINFramework() {
       if(!body) {
@@ -68,41 +73,50 @@
     }
 
     function doSearch() {
-      var peopleDiv = '<ul>',
-          profile,
-          i;
       if(IN.User.isAuthorized()){
         createLayout();
-        IN.API.PeopleSearch()
-          .fields(['first-name', 'last-name', 'headline', 'picture-url', 'public-profile-url'])
-          .params({
-            'keywords': getSelectionText().people,
-//            'first-name': getSelectionText().people,
-            'sort': 'distance'
-          })
-          .result(function(res){
-            if(res){
-              for(i = 0, len = res.people._count; i < len; i++){
-                profile = res.people.values[i];
-                peopleDiv += '<li>' + 
-                                '<img src="' + (profile.pictureUrl || urls.noImage) + '" />' +
-                                '<h2><a href="' + profile.publicProfileUrl + '" target="_blank">'  + profile.firstName + ' ' + profile.lastName + '</a></h2>' +
-                                '<h3>' + profile.headline + '</h3>' +
-                              '</li>';
-              }
-
-              peopleDiv += '</ul>';
-
-              whosInLayout.innerHTML = '<a href="#" class="close-button">close</a><h1>' + res.numResults + ' record(s) found!</h1>' + peopleDiv;
-              IN.Util.removeClass(whosInLayout, 'hide-module');
-            }
-          }
-        );
+        callSearch(getSelectionText().people[pCallCounter], getSelectionText().companies[cCallCounter])
       }
       else{
         IN.User.authorize();
       }
-      
+    }
+
+    function callSearch(person, company){
+      console.log(person, company);
+      IN.API.PeopleSearch()
+        .fields(['first-name', 'last-name', 'headline', 'picture-url', 'public-profile-url'])
+        .params({
+          'keywords': person,
+//          'company-name': company,
+          'sort': 'distance',
+          'count': 2
+        })
+        .result(addToResults);
+    }
+
+    function addToResults(res){
+      var item;
+      if(res){
+        for(i = 0, len = res.people._count; i < len; i++){
+          profile = res.people.values[i];
+          $('<li />').append(
+            '<img src="' + (profile.pictureUrl || urls.noImage) + '" />' +
+            '<h2><a href="' + profile.publicProfileUrl + '" target="_blank">'  + profile.firstName + ' ' + profile.lastName + '</a></h2>' +
+            '<h3>' + profile.headline + '</h3>'
+          ).appendTo(listContainer);
+        }
+
+        whosInLayout.innerHTML = '<a href="#" class="close-button">close</a><h1>' + res.numResults + ' record(s) found!</h1>';
+        IN.Util.removeClass(whosInLayout, 'hide-module');
+
+        pCallCounter++;
+        cCallCounter++;
+
+        if(pCallCounter < 4){
+          callSearch(getSelectionText().people[pCallCounter], getSelectionText().companies[cCallCounter]);
+        }
+      }
     }
 
     function onClick(e) {
@@ -114,10 +128,11 @@
 
     function createLayout(){
       if(!whosInLayout){
-        whosInLayout = document.createElement('div');
-        whosInLayout.setAttribute('id', 'whosInWrapper');
-        body.appendChild(whosInLayout);
-        IN.Event.on(whosInLayout, 'click', onClick, null);
+        whosInLayout = $('#whosInWrapper');
+//        whosInLayout = document.createElement('div');
+//        whosInLayout.setAttribute('id', 'whosInWrapper');
+//        body.appendChild(whosInLayout);
+        whosInLayout.click(onClick);
       }
     }
 

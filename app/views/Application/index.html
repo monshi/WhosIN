@@ -4,6 +4,10 @@
 #{set 'moreScripts'}
 	<script type="text/javascript">
     var WhosINData = ${response.getJson().raw()};
+    console.log(WhosINData);
 	</script>
 	<script type="text/javascript" src="/js/main.js"></script>
 #{/set}
+<div id="whosInWrapper">
+  <ul></ul>
+</div>

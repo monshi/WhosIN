@@ -1,0 +1,9 @@
+#{extends 'main.html' /}
+#{set title:'WhosIN' /}
+
+<div style="text-align: center;margin-top: 50px;">
+  <img src="/img/whosin_logo.png" alt="WhosIN Logo" />
+  <p>
+    Bookmarklet: &nbsp;&nbsp; <a href="javascript:(function(){if(!window.whosINscript){window.whosINscript=document.createElement('script');window.whosINscript.type='text/javascript';window.whosINscript.src='http://omonshiz-ld.linkedin.biz:7890/js/whosin.js';document.getElementsByTagName('body')[0].appendChild(window.whosINscript)}else{WhosINObject.run()}})();">WhosIN</a>
+  </p>
+</div>

@@ -10,6 +10,7 @@ GET     /favicon.ico                            404
 
 # Project roots
 GET    /getdata                                Application.getData
+GET   /bookmarklet                             Application.bookmarklet
 
 POST	/process								Application.process
 

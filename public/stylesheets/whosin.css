@@ -7,7 +7,7 @@
   z-index: 100000;
   border: none;
   border-right: 1px solid #98BFD6;
-  background: #efefef;
+  background: #f9f9f9;
   overflow: auto;
   overflow-x: hidden;
 }

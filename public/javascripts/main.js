@@ -11,12 +11,13 @@
     cCallCounter = 0,
 //    walker = document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false),
     urls = {
-      root: 'http://localhost:7890',
+      root: 'http://omonshiz-ld.linkedin.biz:7890',
       css: '/css/main.css',
       noImage:'/img/icon_no_photo_no_border_60x60.png'
     },
     $ = jQuery,
-    listContainer = $('.people-list');
+    peopleListContainer = $('.people-list'),
+    companyListContainer = $('.company-list');
 
     function initINFramework() {
       if(!body) {
@@ -77,7 +78,8 @@
     function doSearch() {
       if(IN.User.isAuthorized()){
         createLayout();
-        callSearch(getSelectionText().people[pCallCounter], getSelectionText().companies[cCallCounter])
+        callCompanySearch(getSelectionText().companies[cCallCounter]);
+        callPeopleSearch(getSelectionText().people[pCallCounter]);
       }
       else{
         IN.User.authorize();
@@ -85,37 +87,43 @@
       }
     }
 
-    function callSearch(person, company){
+    function callPeopleSearch(person){
       IN.API.PeopleSearch()
         .fields(['first-name', 'last-name', 'headline', 'picture-url', 'public-profile-url'])
         .params({
           'keywords': person,
-//          'company-name': company,
           'sort': 'relevance',
           'count': 2
         })
-        .result(addToResults);
+        .result(addToPeopleResults);
     }
     
     function callCompanySearch(company){
-      
+      IN.API.Raw().url('/company-search:(companies:(id,name,square-logo-url,logo-url,industry))?count=2&keywords='+company).result(addToCompanyResults);
+
+      if(pCallCounter < 4 && getSelectionText().companies[pCallCounter].indexOf(' ') !== -1){
+        callPeopleSearch(getSelectionText().companies[pCallCounter]);
+      }
     }
 
-    function addToResults(res){
+    function addToPeopleResults(res){
+      var profile;
       if(res){
         for(i = 0, len = res.people._count; i < len; i++){
           profile = res.people.values[i];
           if($.inArray(profile['publicProfileUrl'], peopleList) === -1 && typeof profile['publicProfileUrl'] !== 'undefined'){
             peopleList.push(profile['publicProfileUrl']);
             $('<li />').append(
-              '<img src="' + (profile.pictureUrl || urls.noImage) + '" />' +
+              '<a href="' + profile.publicProfileUrl + '" target="_blank"><img src="' + (profile.pictureUrl || urls.noImage) + '" /></a>' +
               '<h2><a href="' + profile.publicProfileUrl + '" target="_blank">'  + profile.firstName + ' ' + profile.lastName + '</a></h2>' +
               '<h3>' + profile.headline + '</h3>'
-            ).appendTo(listContainer);
+            ).appendTo(peopleListContainer);
           }
         }
 
-        console.log(peopleList);
+        if(res.people._total == 0 && pCallCounter == 0){
+          $('<li>No results found in people.</li>').appendTo(companyListContainer);
+        }
 
         whosInLayout.innerHTML = '<a href="#" class="close-button">close</a><h1>' + res.numResults + ' record(s) found!</h1>';
         IN.Util.removeClass(whosInLayout, 'hide-module');
@@ -124,7 +132,24 @@
         cCallCounter++;
 
         if(pCallCounter < 4 && getSelectionText().people[pCallCounter].indexOf(' ') !== -1){
-          callSearch(getSelectionText().people[pCallCounter], getSelectionText().companies[cCallCounter]);
+          callPeopleSearch(getSelectionText().people[pCallCounter]);
+        }
+      }
+    }
+
+    function addToCompanyResults(res){
+      var profile;
+      if(res){
+        for(i = 0, len = res.companies._count; i < len; i++){
+          profile = res.companies.values[i];
+          $('<li />').append(
+            '<a href="http://www.linkedin.com/company/' + profile.id + '" target="_blank"><img src="' + ((profile.squareLogoUrl || profile.logoUrl) || urls.noImage) + '" /></a>' +
+            '<h2><a href="http://www.linkedin.com/company/' + profile.id + '" target="_blank">'  + profile.name + '</a></h2>' +
+            '<h3>' + profile.industry + '</h3>'
+          ).appendTo(companyListContainer);
+        }
+        if(res.companies._total == 0 && cCallCounter == 0){
+          $('<li>No results found in companies.</li>').appendTo(companyListContainer);
         }
       }
     }

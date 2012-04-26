@@ -33,4 +33,8 @@ public class Application extends Controller {
 
 //    renderTemplate("Application/index.html", response);
   }
+
+  public static void bookmarklet(){
+    render();
+  }
 }

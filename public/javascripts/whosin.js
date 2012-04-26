@@ -6,11 +6,12 @@
       css     = null,
       spinner = null,
       btnExit = null,
+      rootUrl = 'http://omonshiz-ld.linkedin.biz:7890',
       urls    = {
-        iframe:   'http://localhost:7890/process',
-        css:      'http://localhost:7890/css/whosin.css',
-        spinner:  'http://localhost:7890/img/loading_spinner.gif',
-        btnExit:  'http://localhost:7890/img/close_icon.gif'
+        iframe:   rootUrl + '/process',
+        css:      rootUrl + '/css/whosin.css',
+        spinner:  rootUrl + '/img/loading_spinner.gif',
+        btnExit:  rootUrl + '/img/close_icon.gif'
       },
       isDestroyed = true;
 
@@ -52,6 +53,7 @@
   }
 
   function submitForm(){
+//    input.value = getSelectedText() || body.innerHTML;
     input.value = body.innerHTML;
     iframe.onload = onIframeLoad;
     form.submit();
@@ -75,6 +77,32 @@
     btnExit.id = 'whosInCloseIcon';
     btnExit.onclick = destroy;
     body.appendChild(btnExit);
+  }
+
+  function getSelectedText(){
+    var text = "",
+        sel = null,
+        container = null,
+        i,
+        len;
+
+    if(typeof window.getSelection !== 'undefined') {
+      sel = window.getSelection();
+      if(sel.rangeCount){
+        container = document.createElement('div');
+        for(i = 0, len = sel.rangeCount; i < len; i += 1 ){
+          container.appendChild(sel.getRangeAt(i).cloneContents());
+        }
+        text = container.textContent;
+      }
+    }
+    else if(typeof document.selection !== 'undefined') {
+      if(document.selection.type === 'text'){
+        text = document.selection.createRange().text;
+      }
+    }
+
+    return text.replace(/^\s+|\s+$/g,'');
   }
 
   function destroy(){

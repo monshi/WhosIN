@@ -11,3 +11,17 @@
   overflow: auto;
   overflow-x: hidden;
 }
+
+#whosInPreloading {
+  position: fixed;
+  top: 100px;
+  left: 120px;
+  z-index: 100002;
+}
+
+#whosInCloseIcon {
+  position: fixed;
+  top: 2px;
+  left: 280px;
+  z-index: 100001;
+}

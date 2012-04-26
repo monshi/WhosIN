@@ -11,12 +11,12 @@
     cCallCounter = 0,
 //    walker = document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false),
     urls = {
-      root: 'http://omonshiz-ld.linkedin.biz:7890',
+      root: 'http://localhost:7890',
       css: '/css/main.css',
       noImage:'/img/icon_no_photo_no_border_60x60.png'
     },
     $ = jQuery,
-    listContainer = $('ul');
+    listContainer = $('.people-list');
 
     function initINFramework() {
       if(!body) {
@@ -47,6 +47,7 @@
     }
 
     function getSelectionText() {
+      /*
       var text = "",
           sel = null,
           container = null,
@@ -68,6 +69,7 @@
           text = document.selection.createRange().text;
         }
       }
+      */
       return WhosINData.result;
 //      return text.replace(/^\s+|\s+$/g,'');
     }
@@ -79,6 +81,7 @@
       }
       else{
         IN.User.authorize();
+        IN.Event.on(IN, "auth", WhosIN.search);
       }
     }
 
@@ -92,6 +95,10 @@
           'count': 2
         })
         .result(addToResults);
+    }
+    
+    function callCompanySearch(company){
+      
     }
 
     function addToResults(res){

@@ -6,7 +6,7 @@
     inScript = null,
     inInner,
     whosInLayout,
-    items = [],
+    peopleList = [],
     pCallCounter = 0,
     cCallCounter = 0,
 //    walker = document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false),
@@ -83,29 +83,32 @@
     }
 
     function callSearch(person, company){
-      console.log(person, company);
       IN.API.PeopleSearch()
         .fields(['first-name', 'last-name', 'headline', 'picture-url', 'public-profile-url'])
         .params({
           'keywords': person,
 //          'company-name': company,
-          'sort': 'distance',
+          'sort': 'relevance',
           'count': 2
         })
         .result(addToResults);
     }
 
     function addToResults(res){
-      var item;
       if(res){
         for(i = 0, len = res.people._count; i < len; i++){
           profile = res.people.values[i];
-          $('<li />').append(
-            '<img src="' + (profile.pictureUrl || urls.noImage) + '" />' +
-            '<h2><a href="' + profile.publicProfileUrl + '" target="_blank">'  + profile.firstName + ' ' + profile.lastName + '</a></h2>' +
-            '<h3>' + profile.headline + '</h3>'
-          ).appendTo(listContainer);
+          if($.inArray(profile['publicProfileUrl'], peopleList) === -1 && typeof profile['publicProfileUrl'] !== 'undefined'){
+            peopleList.push(profile['publicProfileUrl']);
+            $('<li />').append(
+              '<img src="' + (profile.pictureUrl || urls.noImage) + '" />' +
+              '<h2><a href="' + profile.publicProfileUrl + '" target="_blank">'  + profile.firstName + ' ' + profile.lastName + '</a></h2>' +
+              '<h3>' + profile.headline + '</h3>'
+            ).appendTo(listContainer);
+          }
         }
+
+        console.log(peopleList);
 
         whosInLayout.innerHTML = '<a href="#" class="close-button">close</a><h1>' + res.numResults + ' record(s) found!</h1>';
         IN.Util.removeClass(whosInLayout, 'hide-module');
@@ -113,7 +116,7 @@
         pCallCounter++;
         cCallCounter++;
 
-        if(pCallCounter < 4){
+        if(pCallCounter < 4 && getSelectionText().people[pCallCounter].indexOf(' ') !== -1){
           callSearch(getSelectionText().people[pCallCounter], getSelectionText().companies[cCallCounter]);
         }
       }

@@ -11,7 +11,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.FileRequestEntity;
@@ -37,6 +39,7 @@ public class Calais
   private File input;
   private File output;
   private HttpClient client;
+  private Comparator<? super JSONObject> myComparator;
 
   // This is the method to execute the call to Calais API with a HTML as String
   // It will return a JSONObject with only person and company name in result.
@@ -85,7 +88,7 @@ public class Calais
     //method.setRequestHeader("Accept", "text/simple");
     method.setRequestHeader("Accept", "application/json");
 
-    method.setRequestHeader("calculateRelevanceScore", "false");
+    method.setRequestHeader("calculateRelevanceScore", "true");
 
     // Enable Social Tags processing
     method.setRequestHeader("enableMetadataType", "SocialTags");
@@ -191,26 +194,50 @@ public class Calais
   private JSONObject parseJSON(Reader reader)
       throws IOException, ParseException
   {
+    myComparator = new Comparator<JSONObject>()
+    {
+      public int compare(JSONObject jsonObject, JSONObject jsonObject1)
+      {
+        double relevance = (Double) jsonObject.get("relevance");
+        double relevance1 = (Double) jsonObject1.get("relevance");
+        if (relevance < relevance1)
+          return 1;
+        return -1;
+      }
+    };
+
     JSONParser parser = new JSONParser();
     JSONObject jsonObject = (JSONObject)parser.parse(reader);
     JSONObject result = new JSONObject();
-    List<String> people = new ArrayList<String>();
-    List<String> companies = new ArrayList<String>();
+    TreeSet<JSONObject> people = new TreeSet<JSONObject>(myComparator);
+    TreeSet<JSONObject> companies = new TreeSet<JSONObject>(myComparator);
 
     for (Object value : jsonObject.values())
     {
       JSONObject jsonValue = (JSONObject) value;
       String type = (String) jsonValue.get("_type");
       if (type != null && type.equalsIgnoreCase("Person")) {
-        people.add((String) jsonValue.get("name"));
+        people.add(jsonValue);
       } else if (type != null && type.equalsIgnoreCase("Company")) {
-        companies.add((String) jsonValue.get("name"));
+        companies.add(jsonValue);
       }
     }
 
+    List<String> peopleList = new ArrayList<String>();
+    List<String> companyList = new ArrayList<String>();
+
+    for (JSONObject person : people)
+    {
+      peopleList.add((String)person.get("name"));
+    }
+    for (JSONObject company : companies)
+    {
+      companyList.add((String)company.get("name"));
+    }
+
     JSONObject resultValue = new JSONObject();
-    resultValue.put("people", people);
-    resultValue.put("companies", companies);
+    resultValue.put("people", peopleList);
+    resultValue.put("companies", companyList);
     result.put("result", resultValue);
 
     return result;
